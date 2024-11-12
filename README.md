@@ -1,10 +1,14 @@
-# Getting Started with Create React App
+# Getting Started with Order Management
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Order Management](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm install`
+
+npm install download and install all the dependencies.
 
 ### `npm start`
 
