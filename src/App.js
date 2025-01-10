@@ -1,19 +1,23 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import Orders from "./pages/Orders";
-import About from "./pages/About";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+import Orders from './pages/Orders';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import PrivateRoute from './components/PrivateRoute';
 
 export default function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" exact element={<Home />}></Route>
-          <Route path="/Home" exact element={<Home />}></Route>
-          <Route path="/orders" exact element={<Orders />}></Route>
-          <Route path="/about" exact element={<About />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/orders" element={<PrivateRoute element={<Orders />} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

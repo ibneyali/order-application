@@ -1,8 +1,8 @@
-import React from "react";
-import Sidenav from "../components/Sidenav";
-import Box from '@mui/material/Box';
-import Navbar from "../components/Navbar";
-import OrdersList from "./OrdersList";
+import React from 'react';
+import { Box } from '@mui/material';
+import Navbar from '../components/Navbar';
+import Sidenav from '../components/Sidenav';
+import OrdersList from './OrdersList';
 
 export default function Orders() {
   return (

@@ -16,6 +16,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useAppStore } from '../appStore';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const AppBar = styled(MuiAppBar, {
 })(({ theme }) => ({
@@ -88,6 +90,20 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await axios.post('http://localhost:8005/auth/logout');
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const username = localStorage.getItem('username');
+  const isAuthenticated = !!localStorage.getItem('token');
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -105,8 +121,18 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {isAuthenticated ? (
+        <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+      ) : (
+        <>
+          <MenuItem onClick={handleMenuClose}>
+            <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login</Link>
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose}>
+            <Link to="/register" style={{ textDecoration: 'none', color: 'inherit' }}>Register</Link>
+          </MenuItem>
+        </>
+      )}
     </Menu>
   );
 
@@ -194,6 +220,11 @@ export default function Navbar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+          {username && (
+            <Typography variant="h6" noWrap component="div">
+              {username}
+            </Typography>
+          )}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
