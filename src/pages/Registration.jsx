@@ -39,7 +39,7 @@ export default function Registration() {
     }
     setError('');
     try {
-      const response = await axios.post('http://localhost:8005/auth/registration', {
+      await axios.post('http://localhost:8005/auth/registration', {
         fullName,
         username,
         email,
