@@ -15,9 +15,10 @@ import axios from 'axios';
 
 export default function Registration() {
   const [formData, setFormData] = useState({
-    fullName: '',
+    fullname: '',
     username: '',
     email: '',
+    rolename: '',
     password: '',
     confirmPassword: '',
   });
@@ -32,23 +33,26 @@ export default function Registration() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { fullName, username, email, password, confirmPassword } = formData;
+    const { fullname, username, email, rolename, password, confirmPassword } = formData;
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     setError('');
     try {
-      await axios.post('http://localhost:8005/auth/registration', {
-        fullName,
+      await axios.post('http://localhost:8005/api/admin/registration', {
+        fullname,
         username,
         email,
+        rolename,
         password,
         confirmPassword,
+
       });
       setOpen(true); // Open the modal
     } catch (error) {
-      setError(error.response.data);
+      console.log(error);
+      setError(error.response.data.message);
     }
   };
 
@@ -71,10 +75,10 @@ export default function Registration() {
         <TextField
             fullWidth
             label="Full Name"
-            name="fullName"
+            name="fullname"
             variant="outlined"
             margin="normal"
-            value={formData.fullName}
+            value={formData.fullname}
             onChange={handleChange}
             required
           />
@@ -96,6 +100,17 @@ export default function Registration() {
             variant="outlined"
             margin="normal"
             value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            label="Role"
+            name="rolename"
+            type="role"
+            variant="outlined"
+            margin="normal"
+            value={formData.rolename}
             onChange={handleChange}
             required
           />

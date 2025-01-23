@@ -10,7 +10,7 @@ import axios from 'axios';
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -23,22 +23,22 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, password } = formData;
+    const { email, password } = formData;
     setError('');
     try {
-      const response = await axios.post('http://localhost:8005/auth/login', {
-        username,
+      const response = await axios.post('http://localhost:8005/api/admin/login', {
+        email,
         password,
       });
       console.log('Login successful:', response.data);
-      // Store the JWT token and username in local storage
+      // Store the JWT token and username/email in local storage
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', username);
+      localStorage.setItem('email', email);
       // Redirect to the dashboard or another page
       window.location.href = '/orders';
     } catch (error) {
-      console.error('Login error:', error);
-      setError('Login failed. Please check your credentials and try again.');
+      //console.error('Login error:', error.response.data.message);
+      setError(error.response.data.message);
     }
   };
 
@@ -55,11 +55,11 @@ export default function Login() {
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
           <TextField
             fullWidth
-            label="User Name"
-            name="username"
+            label="Email"
+            name="email"
             variant="outlined"
             margin="normal"
-            value={formData.username}
+            value={formData.email}
             onChange={handleChange}
             required
           />

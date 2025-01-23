@@ -92,7 +92,7 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     try {
-      await axios.post('http://localhost:8005/auth/logout');
+      await axios.post('http://localhost:8005/api/admin/logout');
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       window.location.href = '/login';
