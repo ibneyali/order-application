@@ -10,8 +10,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Alert,
 } from '@mui/material';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Registration() {
   const [formData, setFormData] = useState({
@@ -24,7 +26,9 @@ export default function Registration() {
   });
 
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,32 +37,31 @@ export default function Registration() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { fullname, username, email, rolename, password, confirmPassword } = formData;
+    const { password, confirmPassword } = formData;
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     setError('');
     try {
-      await axios.post('http://localhost:8005/api/admin/registration', {
-        fullname,
-        username,
-        email,
-        rolename,
-        password,
-        confirmPassword,
-
-      });
-      setOpen(true); // Open the modal
+      const response = await axios.post('http://localhost:8005/api/admin/registration', formData);
+      setSuccess('Registration successful');
+      setError('');
+      setOpen(true);
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000); // Redirect to login page after 2 seconds
     } catch (error) {
-      console.log(error);
-      setError(error.response.data.message);
+      if (error.response && error.response.data) {
+        setError(error.response.data.message);
+      } else {
+        setError('An error occurred. Please try again.');
+      }
     }
   };
 
   const handleClose = () => {
     setOpen(false);
-    window.location.href = '/login'; // Redirect to login page
   };
 
   return (
@@ -72,7 +75,7 @@ export default function Registration() {
       >
         <Typography variant="h4" gutterBottom>Register</Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
-        <TextField
+          <TextField
             fullWidth
             label="Full Name"
             name="fullname"
@@ -96,7 +99,6 @@ export default function Registration() {
             fullWidth
             label="Email"
             name="email"
-            type="email"
             variant="outlined"
             margin="normal"
             value={formData.email}
@@ -105,9 +107,8 @@ export default function Registration() {
           />
           <TextField
             fullWidth
-            label="Role"
+            label="Role Name"
             name="rolename"
-            type="role"
             variant="outlined"
             margin="normal"
             value={formData.rolename}
@@ -136,34 +137,29 @@ export default function Registration() {
             onChange={handleChange}
             required
           />
-          {error && (
-            <Typography color="error" variant="body2">
-              {error}
-            </Typography>
-          )}
+          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+          {success && <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>}
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 2 }}
+            color="primary"
+            sx={{ mt: 3, mb: 2 }}
           >
             Register
           </Button>
         </Box>
       </Box>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Registration Successful</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Your registration was successful. You will be receive a mail to your registered email please verify..
+            Your registration was successful. You will receive an email to your registered email. Please verify.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            OK
+            Close
           </Button>
         </DialogActions>
       </Dialog>
